@@ -10,7 +10,7 @@ export default function Header() {
         className="flex items-center gap-3 justify-center w-max m-auto"
       >
         <Image src={logo} alt="logo" width={60} height={60} />
-        <span className="text-xl font-semibold">My Awesome Blog</span>
+        <span className="text-xl font-semibold">My Blog</span>
       </Link>
     </div>
   );

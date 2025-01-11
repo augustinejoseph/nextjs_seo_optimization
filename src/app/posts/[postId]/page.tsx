@@ -16,28 +16,59 @@ export async function generateStaticParams() {
   return posts.map(({ id }) => id);
 }
 
-// Manually deduplicate requests if not using fetch
-// const getPost = cache(async (postId: string) => {
-//   const post = await prisma.post.findUnique(postId);
-//   return post;
-// })
-
 export async function generateMetadata({
   params: { postId },
 }: BlogPostPageProps): Promise<Metadata> {
   const response = await fetch(`https://dummyjson.com/posts/${postId}`);
   const post: BlogPost = await response.json();
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL || `${baseUrl}/images`;
+
   return {
     title: post.title,
     description: post.body,
-    // openGraph: {
-    //   images: [
-    //     {
-    //       url: post.imageUrl
-    //     }
-    //   ]
-    // }
+
+    keywords: [
+      ...(post?.title?.split(" ") ?? []),
+      "blog",
+      "articles",
+      "web development",
+      "technology",
+    ],
+
+    openGraph: {
+      type: "article",
+      url: `${baseUrl}/posts/${postId}`,
+      title: post.title,
+      description: post.body,
+      images: [
+        {
+          url: `${imageUrl}/og-image-${postId}.png`,
+          width: 1200,
+          height: 630,
+          alt: `Open Graph image for ${post.title}`,
+        },
+      ],
+      siteName: "My Awesome Blog",
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      site: "@myawesomeblog",
+      title: post.title,
+      description: post.body,
+      images: [
+        {
+          url: `${imageUrl}/twitter-card-${postId}.jpg`,
+          alt: `Twitter Card image for ${post.title}`,
+        },
+      ],
+    },
+
+    alternates: {
+      canonical: `${baseUrl}/posts/${postId}`,
+    },
   };
 }
 

@@ -12,7 +12,7 @@ export default function Footer() {
         </Link>
       </div>
       <div>
-        &copy; {new Date().getFullYear()} My Awesome Blog. All rights reserved.
+        &copy; {new Date().getFullYear()} My Blog.
       </div>
     </footer>
   );
